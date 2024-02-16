@@ -157,13 +157,13 @@ Note that the data is saved in stata file format and you can use "haven" package
 "Further ed" to "Further education college"
 "Higher ed." to "Higher education"
 
-7) Merge the "Further education college" and "Higher education college" categories of the variable education into one category named "More than secondary".
+7) Merge the "Further education college" and "Higher education" categories of the variable education into one category named "More than secondary".
 
 8) Determine the number of missing values in the four variables using the functions "is.na()" and "sum()".
 
 9) Identify the unique values of `trmost`(You can utilize the "unique()" function or the "table()" function).
 
-10)Compute the mean of `trmost`, `trgov` and `accmo`. Remember to remove NAs while using mean(). Aim to condense the command into one or two lines while obtaining the mean for all three variables (for example use sapply(), or colMeans()).
+10) Compute the mean of `trmost`, `trgov` and `accmo`. Remember to remove NAs while using mean(). Aim to condense the command into one or two lines while obtaining the mean for all three variables (for example use sapply(), or colMeans()).
 
 ### Exercise 2 - Data visualization
 1) Visualize `trmost`, `trgov`, `accmo`, and `education` separately. Note: When plotting, ggplot2 ignores NA values and only plots the available data. However, when the variable is a factor, ggplot plots NA as a category.

@@ -1,0 +1,140 @@
+---
+title: "Data and Measurement"
+output:
+  html_document:
+    theme: 
+       bootswatch: minty
+    df_print: kable
+    code_folding: hide 
+---
+
+# Tutorial 4
+
+In this tutorial, we will utilize the "epiR_short.R" dataset to assess reliability using various methods. This dataset contains test and retest data for 474 participants on the EPI personality test. The EPI test includes 57 items measuring two broad dimensions: Extraversion-Introversion and Stability-Neuroticism, along with an additional Lie scale. It was developed by Eysenck and Eysenck in 1964.
+
+##  {.tabset .tabset-fade .tabset-pills}
+### Exercise 1 
+
+1) Load the "epiR_short.RData" to the environment. Note you can use load() function to load an RData.
+```{r}
+load("epiR_short.RData")
+```
+
+2) Install the package "psych" (if it is not already installed) and load the package. 
+```{r}
+library(psych)
+```
+
+3) Explore the dataset (e.g. its structure and missings). Note the columns V1-V57 refer to the 57 items from the Eysenck Personality Inventory, for details see https://chsresults.com/blog/test/eysencks-personality-inventory-epi-extroversionintroversion/.
+```{r}
+#Check the structure
+str(epiR_short)
+
+#Are there any missings?
+sum(is.na(epiR_short))
+
+#I would like to see the number of missing values per variable,
+#so I decide to use sapply function to apply the nested function (sum(is.na()) to all elements of the dataframe
+sapply(epiR_short, function(x) sum(is.na(x)))                                
+
+```
+
+4) Define two vectors containing the relevant items for neuroticism and impsulsivity:
+- Neuroticism  should include the items: "V2", "V4", "V7", "V9", "V11", "V14", "V16", "V19", "V21", "V23", "V26", "V28", "V31", "V33", "V35", "V38", "V40","V43", "V45", "V47", "V50", "V52","V55", "V57"
+- Impulsivity should include the following items:"V1", "V3", "V8", "V10", "V13", "V22", "V39", "V5", "V41"
+```{r}
+#define the vectors
+neuroticism <- c( "V2", "V4", "V7", "V9", "V11", "V14", "V16", "V19", "V21", "V23", "V26", "V28", "V31", "V33", "V35", "V38", "V40","V43", "V45", "V47", "V50", "V52","V55", "V57")
+
+impulsivity <- c("V1", "V3", "V8", "V10", "V13", "V22", "V39", "V5", "V41")
+```
+
+5) Run a test-retest analysis for neuroticism (Hint: You can use the testRetest() function from pysch package and use the neuroticism vector you defined above to specify the "keys" argument in the function (e.g. keys = neuroticism). What is the reliability of neuroticism measure? In other words, what is the correlation of the scores over time?
+```{r}
+testRetest(epiR_short, keys = neuroticism, id ="id", time ="time")
+```
+
+6) How is this correlation (estimate of reliability) actually calculated when using the scores of several items? For example, is it an pairwise correlation between each measurement over time or sth else? Think about this question before moving on to the next two exercises that will help you figure this out.
+
+7) Calculate the row means of the items used to define neuroticism at time 1 and time 2 separately. Tip: You can use the rowMeans()function. To use this function, you may need to save the part of the data frame that you will use as a matrix.
+```{r}
+time1_scores <- rowMeans(as.matrix(epiR_short[epiR_short$time==1,neuroticism]),na.rm =TRUE)
+time2_scores <-rowMeans(as.matrix(epiR_short[epiR_short$time==2,neuroticism]),na.rm =TRUE)
+```
+
+8) Calculate the correlation between the row means of the items used to define neuroticism at time 1 and time 2 and compare it to the correlation (estimate of reliability) you received from testRetest() function.
+```{r}
+cor(time1_scores,time2_scores)
+#this is exactly the same value we got from testRetest function.
+```
+
+
+9) Are the missing cases automatically handled? Check the "Note" section in help file to find the answer.
+```{r}
+cat("It says in the last paragraph that 'The data are first sorted by time and id, and then those cases from time 1 that are matched at time 2 are analyzed', indicating that the missing cases are pairwise deleted.\n")
+```
+
+
+10) Run a test-retest analysis for impulsivity and store the results into an object as in the next exercise you are asked to refer back to this analysis. What is the reliability of impulsivity measure? Hint: Use the testRetest() function from psych package and use the impulsivity vector you defined above to specify the "keys" argument in the function (e.g. keys = impulsivity).
+```{r}
+testRetest_impulse <- testRetest(epiR_short, keys = impulsivity ,id ="id", time ="time")
+```
+
+11) When running the testRetest() function for the above exercise, you should have received a red warning that says: *"Some items were negatively correlated with total scale and were automatically reversed. This is indicated by a negative sign for the variable name"*. What does this mean? And how can you find out which variables have been reversed?
+```{r}
+cat("In multi-item measures, it is common for some items to be negatively and some positively correlated with the overall scale due to the way some questions are asked. If we look at the EPI questionnaire, we can guess which items of the impulsivity scale should be reverse coded.\n
+In the R environment, the error message states that somewhere it is indicated which items/variables from the data frame  are reverse coded by the function. To find out where these variables are, we first check the help file to see if this is specified anywhere in the text. the help file shows a section called 'Value' and here we see that the value 'key' indicates which elements have been reversed. To get more information about the key value, we check the structure of the testRetest object and call this specific value from the output by using the dollar sign.\n")
+
+str(testRetest_impulse) #we see key is a character vector containing the items for impulsivity
+testRetest_impulse$key
+
+cat("Items V5 and V41 are reverse coded.\n")
+```
+
+### Exercise 2
+
+In split-half reliability, a test is randomly divided into two halves, these halves are correlated with each other and then the correlation is adjusted using the Spearman-Brown prophecy formula.
+
+However, splitting a test can be a challenge. For example, there are 126 potential splits for a scale with 9 items, 12,780 for a scale with 16 items, and so on. To cope with this complexity, the splitHalf() function of the psych package systematically examines all possible splits for scales with up to 16 items, and for longer scales it tries 15,000 splits.
+
+
+1) Perform a reliability analysis for the impulsivity scale using the splitHalf() function from the psych package. Set the raw argument to TRUE, which will save all estimates from all splits in one vector and store the results.
+```{r}
+# Store the results of the abalysis into an object
+split_impulse <- splitHalf(epiR_short[,impulsivity], raw = TRUE)
+# display the results
+split_impulse
+```
+
+
+2) Study the output and try to understand what these different split-half reliability refer to. Note: You can ignore the estimates for the Guttman lambda, which we do not cover in this course.
+
+3) How many splits were performed? (Hint: You can check the length of the "raw" vector, which contains all estimates from all splits).
+```{r}
+length(split_impulse$raw)
+unique(length(split_impulse$raw))
+```
+
+4) Draw a histogram of all estimates that are stored as a vector in the "raw" element of the saved result object. Hint: Base R function hist() would be handy to use here as you can input the vector directly in the function. You can of course use ggplot as well but then you should first convert the vector to a dataframe.
+```{r}
+#Plot the values from the "raw" vector of split half reliabilities
+hist(split_impulse$raw,breaks = 100, xlab = "Split-half reliability",
+      main = "Split-half reliabilities of 9 impulsivity items")
+
+# OR
+
+library(ggplot2)
+ggplot(data.frame(estimates = split_impulse$raw), aes(x = estimates)) +
+  geom_histogram(bins = 100, fill = "skyblue", color = "black") +
+  labs(x = "Split-half reliability",
+       y = "Frequency",
+       title = "Split-half reliabilities of 9 impulsivity items")
+```
+
+5) What is the combination of items in each half for the split that gives the maximum split-half reliability? (Hint: Check the structure of the stored results to see where this information is stored).
+```{r}
+str(split_impulse)
+split_impulse$maxAB
+```
+
+

@@ -1,0 +1,296 @@
+---
+title: "GettingStarted_Part3"
+date: "2025-02-03"
+output:
+  html_document:
+   toc: true
+   toc_float: true
+---
+# Getting Started with R - Part 3
+```{r}
+knitr::opts_chunk$set(results = "hide")
+```
+## Step 1: Hello World!
+To output text in R, enclose it in single or double quotes. For numbers, simply type them:
+```{r}
+"Hello World!"
+'Hello World!'
+print("Hello World")
+25
+print(25)
+```
+R can also be used as a calculator:
+
+```{r}
+2+3
+8^2
+```
+## Step 2: Creating objects
+R is an object-oriented programming language, meaning everything you create or manipulate can be stored in an object and accessed later. Whether you’re loading a dataset, modifying data, running analyses, creating plots, or even writing functions, you store everything in objects. This is a key difference from software like Stata or SPSS, where you work with a single active dataset.
+
+An object stores a value or data structure, which can be accessed later using its name. To create an object, assign a value using the "<-" operator . Viewing the object in the console returns its stored value.
+
+```{r}
+name1 <- "Bram"
+name2 <- "Sara"
+age <- 35
+1980 -> birthyear
+name1
+age
+
+name2 <- name1
+name <- name2
+name
+
+birthyear1 <-birthyear2 <- 2002
+```
+
+The = operator can be used as an alternative to <- for assignment in R, but it is generally discouraged for beginners. R prioritizes <- over = in assignment operations.
+
+```{r}
+#age1 <- age2 = 25
+```
+
+You can combine two or more elements using the paste() function.
+```{r}
+text <- "fun"
+paste("this class is", text)
+
+text1 <- "this class is"
+text2 <- "fun"
+paste(text1, text2)
+
+age <- 36
+paste("I am", age, "years old.")
+myage<-paste("I am", age, "years old.")
+```
+
+
+## Step 3: Data types
+
+Numerics: Decimal values like 3.5.
+Integers: Whole numbers like 3, which are also a type of numeric.
+Logical: Boolean values, TRUE or FALSE.
+Date & Time: Date stores only the date, while POSIXct/POSIXlt includes both date and time.
+Characters: Text or string values.
+```{r}
+num_value <- 3.5 
+num_value
+class(num_value)  
+
+int_value <- 4L  
+int_value
+class(int_value)  
+
+bool_value <- TRUE  
+bool_value <- F
+bool_value
+
+date_value <- as.Date("2025-02-06")  
+date_value
+
+datetime_value <- as.POSIXct("2025-02-06 14:30:00")  
+datetime_value
+
+char_value <- "Hello, R!"  
+char_value
+```
+
+You can inspect the data type of an object using the class() function:
+```{r}
+class(age)
+class(int_value)
+class(bool_value)
+class(datetime_value)
+```
+
+If you want to check whether an object is of a specific type, you can use these functions:
+```{r}
+is.numeric(bool_value)
+is.integer(bool_value)
+is.character(bool_value)
+is.logical(bool_value)
+```
+
+## Step 4: Data structures 
+
+There are several fundamental data structures used for storing and organizing data. Here’s a brief explanation of each:
+
+### 1. Vectors
+In R, vectors are one-dimensional sequence of elements of the same type (e.g., numeric, character, logical), and it is treated as a single row or column of data. They are most basic data structure in R. They can be created using the function c().
+
+```{r}
+# Creating a numeric vector
+integer_vector <- c(10, 20, 30, 40, 50)
+integer_vector <- c(10:20)
+integer_vector <- 1:5
+integer_vector #or print(integer_vector)
+
+```
+
+You can access elements using indexing [].
+
+```{r}
+# Accessing elements using indexing 
+integer_vector[3] 
+
+## Access the first and third item 
+integer_vector[c(1,3)] 
+
+## Access the first three items
+integer_vector[1:3]
+
+# You can also use negative index numbers to retrieve all elements except for the ones specified.
+integer_vector[-1]
+
+```
+
+You can change the value of a specific element, by referring to the index number:
+```{r}
+# Change 20 to 25
+integer_vector[2] <- 25
+integer_vector
+```
+
+
+```{r}
+# Create a vector containing both numbers and strings
+string_vector <- c(1, "Sanne", "Jan", 45)
+
+string_vector #or print(string_vector)
+
+# Note that because the vector contains strings, the numbers are also treated as strings
+```
+
+### 2. Matrices
+Matrices are two-dimensional arrays with rows and columns. All elements in a matrix must be of the same data type. Matrices can be created using the function matrix().
+
+```{r}
+my_matrix <- matrix(c(1, 5, 7, 9, 15, 36), nrow = 2, ncol = 3)
+print(my_matrix)
+```
+
+You can access elements by row and column index [row, column].
+```{r}
+my_matrix[1,3]
+```
+
+### 3. Data Frames
+Data frames are two-dimensional data structures that resemble tables or spreadsheets.They can store different types of data in different columns.You can check the data types of columns of the data frame using str() (base R) or  glimpse() (dplyr).
+
+Data frames are created using the function data.frame().
+
+```{r}
+id <- c(1, 2, 3, 4, 5)
+name <- c("Sanne", "Jan", "Mila", "Bram", "Thijs")
+age <- c(25, 30, 35, 40, 45)
+score <- c(85, 90, 88, 94, 80)
+
+my_df <- data.frame(id, name, age, score)
+print(my_df)
+
+new_df <- data.frame(age, eyecolor <- c("blue", "green", "brown", "blue", "brown"))
+print(my_df)
+```
+
+
+```{r}
+str(my_df)
+dplyr::glimpse(my_df)
+```
+
+You can access columns by name: 
+```{r}
+my_df$age
+# OR
+my_df[["age"]]
+```
+
+You can access rows and columns by index: 
+```{r}
+my_df[2, 3]
+#OR
+my_df[2, "age"]
+```
+
+### 4. Lists
+Lists are ordered collections of objects, which can be of different types and structures. Each element of a list can be a vector, matrix, data frame, tibble, or even another list.
+Lists can be created using the list() function.
+```{r}
+my_list <- list(
+  numeric_vector = c(4, 7, 13),
+  character_vector = c("ab", "bb", "cb"),
+  matrix_data = matrix(1:4, nrow = 2, ncol = 2),
+  dataframe = data.frame(x = 1:3, y = c("a", "b", "c"))
+)
+
+print(my_list)
+```
+
+You can access elements by index or name:
+```{r}
+my_list[[1]] 
+#OR
+my_list[["numeric_vector"]] 
+#OR
+my_list$numeric_vector
+```
+
+## Step 5: Some key packages in R 
+
+### 1. Base R  
+Base R comes pre-installed and provides essential functions for **data processing, statistical analysis, and basic plotting**. It builds a strong foundation in R by encouraging users to understand core concepts and solve problems with a general toolkit before relying on specialized packages.  
+
+**Common functions:** `mean()`, `sum()`, `aggregate()`, `lm()` (linear modeling), `plot()`, and more.  
+
+### 2. Tidyverse  
+Tidyverse is a collection of R packages designed for **data manipulation and visualization**, following a consistent and intuitive approach.  
+
+- **ggplot2** – Data visualization  
+- **dplyr** – Data manipulation (`filter()`, `select()`, `mutate()`, `summarize()`)  
+- **tidyr** – Data tidying (reshaping, pivoting)  
+
+- **tibble** – Modern data frames  
+
+### 3. data.table  
+`data.table` is an optimized package for **fast and efficient data manipulation**, particularly suited for **big data**. Filtering, grouping, and summarizing operations run significantly faster compared to **Base R** and **dplyr**.  
+
+---
+
+### Example: Filtering Rows (Age > 30), Selecting Columns, and Sorting (Syntax Examples)  
+
+#### Base R
+```{r}
+
+# Filter rows where age > 30
+filtered_df <- my_df[my_df$age > 30, ]  
+
+# Select columns (name and age)
+selected_df <- filtered_df[, c("name", "age")]
+
+# Sort by age
+sorted_df <- selected_df[order(selected_df$age), ]
+
+# Display result
+sorted_df
+```
+
+#### Tidyverse
+```{r}
+library(dplyr)
+
+my_df %>%
+  filter(age > 30) %>%
+  select(name, age) %>%
+  arrange(age)
+```
+
+
+#### data.table
+```{r}
+library(data.table)
+
+DT <- as.data.table(my_df)
+DT[age > 30, .(name, age)][order(age)]
+```
+

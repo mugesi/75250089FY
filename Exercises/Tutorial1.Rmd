@@ -232,7 +232,7 @@ educ_inc_age_data[3, "age"]
 
 10. Identify the row numbers of observations where `age` is 25 or less. Then, using these row numbers, extract the corresponding income values. 
 ```{r}
-# Find the row numbers for values in the "age" variable smaller than 30
+# Find the row numbers for values in the "age" variable smaller than 25
 indexes_smaller_than_25 <- which(educ_inc_age_data$age <= 25)
 # Extract the income values for these rows
 educ_inc_age_data[indexes_smaller_than_25, "income"]

@@ -1522,7 +1522,7 @@ educ_inc_age_data[14,&quot;education&quot;]</code></pre>
 25 or less. Then, using these row numbers, extract the corresponding
 income values.</li>
 </ol>
-<pre class="r"><code># Find the row numbers for values in the &quot;age&quot; variable smaller than 30
+<pre class="r"><code># Find the row numbers for values in the &quot;age&quot; variable smaller than 25
 indexes_smaller_than_25 &lt;- which(educ_inc_age_data$age &lt;= 25)
 # Extract the income values for these rows
 educ_inc_age_data[indexes_smaller_than_25, &quot;income&quot;]</code></pre>

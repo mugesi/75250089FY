@@ -23,7 +23,7 @@ In this tutorial, we will explore several data wrangling and descriptive statist
 
 - It's important to note that everything in your environment and history will be (or should be) cleared at the conclusion of each session. Ensure that your script encompasses all the necessary code required to execute your analysis.
 
-- Packagesneed to be installed once (install.packages(“package_name”)), and loaded every time you open R (library(package_name)).
+- Packages need to be installed once (install.packages(“package_name”)), and loaded every time you open R (library(package_name)).
 
 
 ##  {.tabset .tabset-fade .tabset-pills}
@@ -69,7 +69,7 @@ my_matrix <- matrix(c(3, 5, 8, 9, 67, "apple", "banana", "orange", "pear", "pers
 # Note that matrices can only contain a single class of data (numeric, character etc.), while data frames can consist of many different classes of data. In this matrix, numbers are treated automatically as characters. 
 ```
 
-7. Create the same matrix as in step 6 by combining the two vectors you created in step 2 and 3. 
+7. Create the same matrix as in step 6 by combining the two vectors you created in step 2 and 4. 
 ```{r}
 my_matrix_combined <- matrix(c(numeric_vector, character_vector), nrow = 5, ncol = 2, byrow = FALSE)
 ```

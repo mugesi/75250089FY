@@ -67,7 +67,7 @@ oxis_df <- as.data.frame(oxis_data)
 ```{r}
 vars <- c("trmost","trgov", "accmo", "dg4")
 str(oxis_df[, vars])
-# here we see that the variable labels are saved as "label. By using the funciton attr, we can access the attirbute of interest of the variables.
+# here we see that the variable labels are saved as "label. By using the function attr, we can access the attribute of the variables of interest.
 attr(oxis_df$trmost, "label")
 attr(oxis_df$trgov, "label")
 attr(oxis_df$accmo, "label")
@@ -110,9 +110,9 @@ table(oxis_df$education,oxis_df$dg4, useNA = "ifany")
 # Merge "Further education college" and "Higher education college" into "More than secondary"
 levels(oxis_df$education)[levels(oxis_df$education) %in% c("Further education college", "Higher education")] <- "More than secondary"
 
-#the above code basically calls the third and fourth levels, i.e. levels(oxis_df$education)[c(3,4)]<- "More than secondary"
-
+#the above code basically calls the third and fourth levels, i.e. 
 #OR
+#levels(oxis_df$education)[c(3,4)]<- "More than secondary"
 
 # Print the updated levels
 print(levels(oxis_df$education))
@@ -133,7 +133,7 @@ sum(is.na(oxis_df$dg4))
 
 9) Identify the unique values of `trmost`(You can utilize the "unique()" function or the "table()" function).
 ```{r}
-table((oxis_df$trmost),useNA = "ifany")
+table((oxis_df$trmost), useNA = "ifany")
 #OR
 unique(oxis_df$trmost)
 ```
@@ -143,6 +143,7 @@ unique(oxis_df$trmost)
 # Apply mean function with na.rm = TRUE to each variable
 vars <- c("trmost","trgov", "accmo")
 sapply(oxis_df[, vars], function(x) mean(x, na.rm = TRUE))
+# this would also work: sapply(oxis_df[, c("trmost", "accmo")], mean, na.rm = T)
 
 #Or
 
@@ -181,12 +182,15 @@ cowplot::plot_grid(bar_trmost, bar_trgov, bar_accmo, bar_education, ncol = 2)
 
 3) Visualize the relationship between trgov and accmo. Would a scatterplot work? If not, what other ways are there to visualize this relationship?
 ```{r}
-#Scatter plots are one of the best ways to visualize a bivariate relationship. However, they only work if both variables are continuous. If one of the variables is discrete, scatter plots with jittering, conditional density plots or other graphs  are often better suited for visualizing relationships.
+#Scatter plots are one of the best ways to visualize a bivariate relationship. However, they only work if both variables are continuous. If one of the variables is discrete, scatter plots with jittering, conditional density plots or other graphs are often better suited for visualizing relationships.
 
 #The scatter plot with jittering 
 scatter_trgov <- ggplot(oxis_df, aes(x = accmo, y = trgov)) +
   geom_jitter(width = 0.2, height = 0.2, color = "skyblue") +
-  labs(title = "Scatter Plot of accmo vs. trgov with jittering", x = "Internet duration in months", y = "institutional trust")
+  labs(title = "Scatter Plot of accmo vs. trgov with jittering",x = "Internet duration in months", y = "institutional trust")
+
+#Display the plot
+print(scatter_trgov)
 
 # The conditional density plot for 'accmo' conditioned on 'trgov' in oxis_df
 filtered_df<- oxis_df[!is.na(oxis_df$trgov) & !is.na(oxis_df$accmo),]
@@ -196,22 +200,25 @@ conditional_density_accmo <- ggplot(data=filtered_df, aes(x = accmo, fill = as.f
        x = "accmo",
        y = "Density")
 
+#Display the plot
+conditional_density_accmo
 ```
 
 4) Visualize the mean internet duration in months for each value of trgov.
 ```{r}
 
 # Calculate mean accmo for each level of trgov
-mean_accmo_trgov <- tapply(oxis_df$accmo, oxis_df$trgov, mean, na.rm = TRUE)
+mean_accmo_trgov <- tapply(oxis_df$accmo, oxis_df$trgov, function(x) mean(x, na.rm = T))
+
+# alternatively you can use the pipes from tidyverse
+#mean_accmo_trgov <- oxis_df %>%
+ # group_by(trgov) %>%
+  #summarise(mean_accmo = mean(accmo, na.rm = TRUE))
+
 
 # Convert the result to a data frame
 mean_accmo_trgov <- data.frame(trgov = as.factor(names(mean_accmo_trgov)), mean_accmo = as.numeric(mean_accmo_trgov))
 
-
-# altearntaively you can use the pipes from tidyverse
-#mean_accmo_trgov <- oxis_df %>%
- # group_by(trgov) %>%
-  #summarise(mean_accmo = mean(accmo, na.rm = TRUE))
 
 # Create a dot plot using geom_point
 ggplot(mean_accmo_trgov, aes(x = trgov, y = mean_accmo)) +
@@ -250,9 +257,9 @@ summary(oxis_df$accmo)
 #IQR = 22-15 = 7
 #7*1.5 = 10.5
 #An observation is an outlier if it falls more than 1.5(IQR) above the upper
-#quartile or more than 1.5(IQR) below the lower quartile. So the observations smalelr than 4.5 and larger than 32.5 are outliers.
+#quartile or more than 1.5(IQR) below the lower quartile. So the observations smaller than 4.5 and larger than 32.5 are outliers.
 
-#See the freqeuncy of smallest and largest values
+#See the frequency of smallest and largest values
 table(oxis_df$accmo)
 
 # 25 outliers, 4 values: 1,2,3,4 months
@@ -269,16 +276,25 @@ table(oxis_df$accmo)
 7) Generate a boxplot for the variable `accmo` and verify if the number of outliers you identified in step 6 corresponds to the outliers depicted in this plot.
 ```{r}
 # Create a boxplot for accmo
+boxplot(oxis_df$accmo)
+boxplot(oxis_df$accmo, 
+        main = "Boxplot of accmo",
+        ylab = "accmo",
+        col = "skyblue",
+        border = "black")
+# Note that due to overlapping points, the boxplot may display only a limited number of dots as outliers, which could represent multiple outlier values.To obtain the number of outliers, we can refer to the output generated by the boxplot function:
+
+#save the boxplot into an object
 boxplot_accmo <- boxplot(oxis_df$accmo, 
         main = "Boxplot of accmo",
         ylab = "accmo",
         col = "skyblue",
         border = "black")
 
-# Note that due to overlapping points, the boxplot may display only a limited number of dots as outliers, which could represent multiple outlier values. To obtain the number of outliers, we can refer to the output generated by the boxplot function:
-
+str(boxplot_accmo)
 # Extract the outlier values in accmo
 outliers <- boxplot_accmo$out
+
 
 # Count the number of outliers
 num_outliers <- length(outliers)

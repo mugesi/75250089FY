@@ -14,7 +14,7 @@ In this tutorial, we will carry out exercises on criterion and content validity.
 
 Overview of  datasets
 
-- depression_data.csv: A group of social science researchers working the field of mental health develop a new assessment tool to measure depressive symptoms. To check the concurrent validity of their new tool they run a survey to 300 respondents where they adminsiter their new tool at teh same time with the more established measure, the Beck Depression Inventory (BDI). 
+- depression_data.csv: A group of social science researchers working in the field of mental health develop a new assessment tool to measure depressive symptoms. To check the concurrent validity of their new tool they run a survey to 300 respondents where they administer their new tool at the same time with the more established measure, the Beck Depression Inventory (BDI). 
 
 - official_records.csv: This data set contain information on the voter turnout for a sample of citizens from offical records.
 

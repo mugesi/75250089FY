@@ -204,7 +204,7 @@ psych::alpha(fear_peer)
 ```
 
 8. Interpret the results.
-- Raw alpha and standardized alpha are the same when all items share similar scales or measurement units. An alpha value of ≥ 0.7 or 0.8 indicates good reliability (Kline, 1999).
+- We usually check the raw alpha (unless items have different scales or measurement units). An alpha value of ≥ 0.7 or 0.8 indicates good reliability (Kline, 1999).
 - Average_r represents the mean inter-item correlation used in alpha computation, while median_r denotes the median inter-item correlation.
 - The mean refers to the scale mean, representing the mean of all individual means.
 - In the section "Reliability if an Item is Dropped", each row corresponds to an item and displays its associated raw alpha, which reflects the overall alpha when that specific item is dropped. For instance, the first row pertains to q02. If dropped, the overall alpha reduces to 0.52, indicating decreased reliability.We evaluate if any raw alpha value exceeds the overall alpha of 0.57. If so, dropping that item would increase the overall alpha of the scale. Other columns in this section illustrate how other statistics would change if the item were dropped.

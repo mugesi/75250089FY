@@ -1,0 +1,126 @@
+---
+title: "Data and Measurement"
+output:
+  html_document:
+    theme: 
+       bootswatch: minty
+    df_print: kable
+    code_folding: hide 
+---
+
+```{r, echo = F}
+library(formatR)
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=70),tidy=TRUE)
+
+```
+
+
+# Tutorial 6
+
+In this tutorial we will use the data set "SAQ.sav". This dataset includes 23 variables measured on a 5-point Likert scale and contains data from 2,571 participants. The items included are:
+
+1. Statistics makes me cry.
+2. My friends will think I’m stupid for not being able to cope with SPSS.
+3. Standard deviations excite me.
+4. I dream that Pearson is attacking me with correlation coefficients.
+5. I don’t understand statistics.
+6. I have little experience of computers.
+7. All computers hate me.
+8. I have never been good at mathematics.
+9. My friends are better at statistics than me.
+10. Computers are useful only for playing games.
+11. I did badly at mathematics at school.
+12. People try to tell you that SPSS makes statistics easier to understand but it doesn’t.
+13. I worry that I will cause irreparable damage because of my incompetenece with computers.
+14. Computers have minds of their own and deliberately go wrong whenever I use them.
+15. Computers are out to get me.
+16. I weep openly at the mention of central tendency.
+17. I slip into a coma whenever I see an equation.
+18. SPSS always crashes when I try to use it.
+19. Everybody looks at me when I use SPSS.
+20. I can’t sleep for thoughts of eigen vectors.
+21. I wake up under my duvet thinking that I am trapped under a normal distribution.
+22. My friends are better at SPSS than I am.
+23. If I’m good at statistics my friends will think I’m a nerd.
+
+
+##  {.tabset .tabset-fade .tabset-pills}
+### Exercise  
+
+1. Load the data into the environment. If you use the read.spss function, set the use.value.labels argument to FALSE to avoid converting numeric variables (with value labels) to factors, since the functions we will use (fa()) require numeric variables.
+```{r}
+library(foreign)
+saq_df <- read.spss("~/Downloads/DS5 SPSS Files/SAQ.sav", to.data.frame = TRUE, use.value.labels = FALSE)
+```
+
+2. You already know this data set from a previous tutorial, so we will skip the step "Exploring the data set".
+
+3.Run the Bartlett test for sphericity using the cortest.bartlett function from the psych package. Interpret the results. Note that you can enter the data set (instead of a correlation matrix) directly into the first argument.
+```{r}
+psych::cortest.bartlett(saq_df)
+```
+
+The test results are significant, which means that we can reject the null hypothesis that our R matrix is an identity matrix (or that the variables are orthogonal to each other, i.e. not correlated) In other words, we find significant multiple correlations between the variables.
+
+4. Apply the Kaiser-Meyer-Olkin measure using the KMO() function from the psych package. Interpret the results.
+```{r}
+psych::KMO(saq_df)
+```
+
+This is a measure of the proportion of variance between the variables that may be common variance. The higher the proportion, the higher the KMO value, the more suitable the data is for factor analysis.
+
+5. Draw a scree plot using the VSS.scree() function from the psych package. How many factors should be extracted according to the inflexion point?
+```{r}
+# Scree plot
+psych::VSS.scree(saq_df)
+```
+I accept the inflexion point on the 5th factor, and will therefore ask for a 4-factor solution.
+
+6. Perform an exploratory factor analysis using the fa() function from the psych package. Determine the nfactors to be extracted based on your answer to the previous question. Set the argument fm to "pa" (principal axis factorization), set max.iter = 100 and use an orthogonal rotation (e.g. rotate = "varimax"). Save the results in an object.
+
+```{r}
+saq_fa <- psych::fa(saq_df,
+                    nfactors = 4,
+                    max.iter = 100,
+                    fm= "pa",
+                    rotate = "varimax")
+```
+
+
+7. Interpret the results (including the model fit indices). You can use the annotated results from the book by Watkins (2021), e.g. p.93).
+
+According to the results:
+
+- 4 factors explain 40% of the total variance.
+- RMSEA indicates a good model fit, i.e. a 4-factor solution does not seem to be a bad idea. (we use CFI and TLI rather for comparison between models, see lecture 5).
+- All four factors have eigenvalues greater than 1 (This is not a strict requirement in EFA, but good to check).
+-All factors have more than two meaningful items that load strongly on them. Items that load strongly on one factor while not loading strongly on others also make sense (this is easier to see from the diagram in Step 8—always check what the items represent). However, item complexity is not ideal, as many items load well on more than one factor.  
+
+
+8. Visualize the results using the fa.diagram() function from the psych.
+```{r}
+psych:: fa.diagram(saq_fa)
+```
+
+9. Extract the loadings for the third item (question_3) for all factors, square the loadings and sum them. Does the value match the value in column h2 in the model results? (You can also extract the communalities by entering communality with the $ sign in your saved model results)
+```{r}
+#calculate communality
+loadings_I3 <- saq_fa$loadings[3,]  #loadings for third variable (third row of Lambda)
+loadings_I3
+
+communality_I3 <- sum(loadings_I3^2)  #SS of factor loadings
+communality_I3
+
+saq_fa$communality[3] 
+```
+
+10. Plot the residuals after extraction using the residuals() function of the psych package (you can set diag = FALSE and na.rm = TRUE). What should we pay attention to in this plot?
+```{r}
+myresiduals <- residuals(saq_fa, diag = FALSE, na.rm = TRUE)
+hist(myresiduals)
+
+#We look for residuals that are larger than 0.05, as Watkins (2021,p.90) states "Ideally, the proportion of non-redundant residual correlations greater than the absolute value of .05 should be small".
+sum(abs(myresiduals) > 0.05, na.rm = TRUE)
+```
+We have 529 residuals from a 23*23 matrix, and only 24 of them are greater than 0.05. That seems acceptable. Another solution would be to perform another factor analysis with a 5-factor solution and compare the results.

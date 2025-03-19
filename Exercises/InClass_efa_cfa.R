@@ -45,6 +45,9 @@ length(which(abs(model_resd)>0.05))
 # OR
 sum(abs(model_resd) > 0.05, na.rm = TRUE)
 
+# how many non-redundant residuals are above .05
+sum(abs(model_resd[lower.tri(model_resd)]) > 0.05, na.rm = TRUE)
+
 
 # CFA ---------------------------------------------------------------------
 library(lavaan)

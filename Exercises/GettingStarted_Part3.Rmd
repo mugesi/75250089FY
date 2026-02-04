@@ -62,17 +62,18 @@ paste(text1, text2)
 
 age <- 36
 paste("I am", age, "years old.")
-myage<-paste("I am", age, "years old.")
+myage <- paste("I am", age, "years old.")
 ```
 
 
 ## Step 3: Data types
 
-Numerics: Decimal values like 3.5.
-Integers: Whole numbers like 3, which are also a type of numeric.
-Logical: Boolean values, TRUE or FALSE.
-Date & Time: Date stores only the date, while POSIXct/POSIXlt includes both date and time.
-Characters: Text or string values.
+- Numerics: Decimal values like 3.5.
+- Integers: Whole numbers like 3, which are also a type of numeric.
+- Logical: Boolean values, TRUE or FALSE.
+- Characters: Text or string values.
+- Factors: Cateogrical data (useful for grouping, plotting, and statistical models)
+- Date & Time: Date stores only the date, while POSIXct/POSIXlt includes both date and time.
 ```{r}
 num_value <- 3.5 
 num_value
@@ -86,14 +87,20 @@ bool_value <- TRUE
 bool_value <- F
 bool_value
 
+char_value <- "Hello, R!"  
+char_value
+
+marital_status <- factor(c("Single", "Married", "Divorced"))
+marital_status
+#If you don’t specify levels, R automatically alphabetically sorts the unique values.
+# Factors are stored as integers internally
+as.integer(marital_status)
+
 date_value <- as.Date("2025-02-06")  
 date_value
 
 datetime_value <- as.POSIXct("2025-02-06 14:30:00")  
 datetime_value
-
-char_value <- "Hello, R!"  
-char_value
 ```
 
 You can inspect the data type of an object using the class() function:
@@ -199,15 +206,19 @@ str(my_df)
 dplyr::glimpse(my_df)
 ```
 
-You can access columns by name: 
+You can access rows and columns by name or by index: 
 ```{r}
 my_df$age
 # OR
 my_df[["age"]]
-```
+#OR
+my_df[,"age"]
+#OR
+my_df[[3]]
+#OR 
+my_df[,3]
 
-You can access rows and columns by index: 
-```{r}
+
 my_df[2, 3]
 #OR
 my_df[2, "age"]

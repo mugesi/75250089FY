@@ -1523,7 +1523,7 @@ name2 &lt;- name1
 name &lt;- name2
 name
 
-birthyear1 &lt;-birthyear2 &lt;- 2002</code></pre>
+birthyear1 &lt;- birthyear2 &lt;- 2002</code></pre>
 <p>The = operator can be used as an alternative to &lt;- for assignment
 in R, but it is generally discouraged for beginners. R prioritizes &lt;-
 over = in assignment operations.</p>
@@ -1538,14 +1538,21 @@ paste(text1, text2)
 
 age &lt;- 36
 paste(&quot;I am&quot;, age, &quot;years old.&quot;)
-myage&lt;-paste(&quot;I am&quot;, age, &quot;years old.&quot;)</code></pre>
+myage &lt;- paste(&quot;I am&quot;, age, &quot;years old.&quot;)</code></pre>
 </div>
 <div id="step-3-data-types" class="section level2">
 <h2>Step 3: Data types</h2>
-<p>Numerics: Decimal values like 3.5. Integers: Whole numbers like 3,
-which are also a type of numeric. Logical: Boolean values, TRUE or
-FALSE. Date &amp; Time: Date stores only the date, while POSIXct/POSIXlt
-includes both date and time. Characters: Text or string values.</p>
+<ul>
+<li>Numerics: Decimal values like 3.5.</li>
+<li>Integers: Whole numbers like 3, which are also a type of
+numeric.</li>
+<li>Logical: Boolean values, TRUE or FALSE.</li>
+<li>Characters: Text or string values.</li>
+<li>Factors: Cateogrical data (useful for grouping, plotting, and
+statistical models)</li>
+<li>Date &amp; Time: Date stores only the date, while POSIXct/POSIXlt
+includes both date and time.</li>
+</ul>
 <pre class="r"><code>num_value &lt;- 3.5 
 num_value
 class(num_value)  
@@ -1558,14 +1565,20 @@ bool_value &lt;- TRUE
 bool_value &lt;- F
 bool_value
 
+char_value &lt;- &quot;Hello, R!&quot;  
+char_value
+
+marital_status &lt;- factor(c(&quot;Single&quot;, &quot;Married&quot;, &quot;Divorced&quot;))
+marital_status
+#If you don’t specify levels, R automatically alphabetically sorts the unique values.
+# Factors are stored as integers internally
+as.integer(marital_status)
+
 date_value &lt;- as.Date(&quot;2025-02-06&quot;)  
 date_value
 
 datetime_value &lt;- as.POSIXct(&quot;2025-02-06 14:30:00&quot;)  
-datetime_value
-
-char_value &lt;- &quot;Hello, R!&quot;  
-char_value</code></pre>
+datetime_value</code></pre>
 <p>You can inspect the data type of an object using the class()
 function:</p>
 <pre class="r"><code>class(age)
@@ -1647,12 +1660,19 @@ new_df &lt;- data.frame(age, eyecolor &lt;- c(&quot;blue&quot;, &quot;green&quot
 print(my_df)</code></pre>
 <pre class="r"><code>str(my_df)
 dplyr::glimpse(my_df)</code></pre>
-<p>You can access columns by name:</p>
+<p>You can access rows and columns by name or by index:</p>
 <pre class="r"><code>my_df$age
 # OR
-my_df[[&quot;age&quot;]]</code></pre>
-<p>You can access rows and columns by index:</p>
-<pre class="r"><code>my_df[2, 3]
+my_df[[&quot;age&quot;]]
+#OR
+my_df[,&quot;age&quot;]
+#OR
+my_df[[3]]
+#OR 
+my_df[,3]
+
+
+my_df[2, 3]
 #OR
 my_df[2, &quot;age&quot;]</code></pre>
 </div>

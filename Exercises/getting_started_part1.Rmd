@@ -1,5 +1,5 @@
 ---
-title: "GettingStarted_Part1"
+title: "getting_started_part1.Rmd"
 date: "2025-02-03"
 output:
   html_document:

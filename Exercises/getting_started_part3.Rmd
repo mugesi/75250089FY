@@ -128,10 +128,10 @@ In R, vectors are one-dimensional sequence of elements of the same type (e.g., n
 
 ```{r}
 # Creating a numeric vector
-integer_vector <- c(10, 20, 30, 40, 50)
-integer_vector <- c(10:20)
-integer_vector <- 1:5
-integer_vector #or print(integer_vector)
+numeric_vector <- c(10, 20, 30, 40, 50)
+numeric_vector <- c(10:20)
+numeric_vector <- 1:5
+numeric_vector #or print(numeric_vector)
 
 ```
 
@@ -139,24 +139,24 @@ You can access elements using indexing [].
 
 ```{r}
 # Accessing elements using indexing 
-integer_vector[3] 
+numeric_vector[3] 
 
 ## Access the first and third item 
-integer_vector[c(1,3)] 
+numeric_vector[c(1,3)] 
 
 ## Access the first three items
-integer_vector[1:3]
+numeric_vector[1:3]
 
 # You can also use negative index numbers to retrieve all elements except for the ones specified.
-integer_vector[-1]
+numeric_vector[-1]
 
 ```
 
 You can change the value of a specific element, by referring to the index number:
 ```{r}
 # Change 20 to 25
-integer_vector[2] <- 25
-integer_vector
+numeric_vector[2] <- 25
+numeric_vector
 ```
 
 

@@ -1601,27 +1601,27 @@ type (e.g., numeric, character, logical), and it is treated as a single
 row or column of data. They are most basic data structure in R. They can
 be created using the function c().</p>
 <pre class="r"><code># Creating a numeric vector
-integer_vector &lt;- c(10, 20, 30, 40, 50)
-integer_vector &lt;- c(10:20)
-integer_vector &lt;- 1:5
-integer_vector #or print(integer_vector)</code></pre>
+numeric_vector &lt;- c(10, 20, 30, 40, 50)
+numeric_vector &lt;- c(10:20)
+numeric_vector &lt;- 1:5
+numeric_vector #or print(numeric_vector)</code></pre>
 <p>You can access elements using indexing [].</p>
 <pre class="r"><code># Accessing elements using indexing 
-integer_vector[3] 
+numeric_vector[3] 
 
 ## Access the first and third item 
-integer_vector[c(1,3)] 
+numeric_vector[c(1,3)] 
 
 ## Access the first three items
-integer_vector[1:3]
+numeric_vector[1:3]
 
 # You can also use negative index numbers to retrieve all elements except for the ones specified.
-integer_vector[-1]</code></pre>
+numeric_vector[-1]</code></pre>
 <p>You can change the value of a specific element, by referring to the
 index number:</p>
 <pre class="r"><code># Change 20 to 25
-integer_vector[2] &lt;- 25
-integer_vector</code></pre>
+numeric_vector[2] &lt;- 25
+numeric_vector</code></pre>
 <pre class="r"><code># Create a vector containing both numbers and strings
 string_vector &lt;- c(1, &quot;Sanne&quot;, &quot;Jan&quot;, 45)
 

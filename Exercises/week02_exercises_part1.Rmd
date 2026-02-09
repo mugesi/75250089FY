@@ -1,0 +1,106 @@
+---
+title: "Data and Measurement"
+output:
+  html_document:
+    theme: 
+       bootswatch: minty
+    df_print: kable
+    code_folding: hide 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = "hide")
+```
+
+# Week 2 - Exercises - Part 1 
+In this tutorial, we will explore several descriptive statistics tasks using the dataset educ_inc_age_data.csv. This dataset contains information on individuals' age, income, and education level.
+
+##  {.tabset .tabset-fade .tabset-pills}
+
+### Exercises - Descriptive statistics
+1. Load the dataset and display its structure, along with its first and last five observations.
+```{r include = TRUE}
+# Read the dataset into a data frame
+educ_inc_age_data <- read.csv("/Users/msimsek/Desktop/UvA/Teaching/Data_and_Measurement_RMSS/2024/W1/Tutorials/educ_inc_age_data.csv")
+
+# Display the structure of the dataset
+str(educ_inc_age_data)
+
+# Display the first five obs
+head(educ_inc_age_data, n = 5) # By default, head() returns the first 6 rows, but you can specify the number of rows to display by providing the n argument.
+
+#Display the last five obs
+tail(educ_inc_age_data, n = 5) ## By default, tail() returns the last 6 rows, but you can specify the number of rows to display by providing the n argument.
+```
+
+
+2. Compute the mean, median, and mode for the `age` variable.
+```{r}
+# Mean
+mean_age <- mean(educ_inc_age_data$age)
+mean_age
+# Median
+median_age <- median(educ_inc_age_data$age)
+median_age
+
+# Mode
+# Mode function is not readily available in base R. You can however create our own function (though maybe this is a bit advanced, so we try it later in the course), or use a function from a package, such as DescTool.
+
+mode_age <- DescTools::Mode(educ_inc_age_data$age)
+mode_age #the first value we get is the mode and the second one from attr(, "freq") is the frequency of the mode value
+```
+
+
+3. Compute the range for `income` variable.
+```{r}
+# Range
+income_range <- max(educ_inc_age_data$income) - min(educ_inc_age_data$income)
+income_range
+```
+
+
+4. Compute the variance and standard deviation for the `age` variable.
+```{r}
+# Variance
+var_age <- var(educ_inc_age_data$age)
+var_age
+
+# Standard Deviation
+sd_age <- sd(educ_inc_age_data$age)
+sd_age
+```
+
+5. Compute the 25th, 50th (median), and 75th percentiles, as well as the interquartile range for the `income` variable.
+```{r}
+# Percentiles
+percentiles_income <- quantile(educ_inc_age_data$income, c(0.25, 0.5, 0.75))
+percentiles_income
+
+# Interquartile Range
+iqr_income <- IQR(educ_inc_age_data$income)
+iqr_income
+```
+
+6. Compute the Z-scores for the `age` variable.
+```{r}
+# Z-scores for age
+z_scores_age <- (educ_inc_age_data$age - mean_age) / sd_age
+z_scores_age
+
+```
+
+7. Compute the Z-score for `income` = 14853
+```{r}
+# Z-score for income
+z_score_income <- (14853 - mean(educ_inc_age_data$income)) / sd(educ_inc_age_data$income)
+```
+
+8. Ask for summary statistics for each variable in the dataset using one function. 
+```{r}
+summary(educ_inc_age_data)
+
+#Later in the course, we will use the psych package for reliability and validity analyses. This package also includes a useful summary function called describe.
+psych::describe(educ_inc_age_data)
+```
+
+

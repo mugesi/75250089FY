@@ -10,7 +10,7 @@ output:
 
 # Exercises - Week 3
 
-In this tutorial, we will carry out exercises on criterion-related validity and construct validity. We will also deal with some data wrangling tasks. Below you will find detailed information on the data sets we will use.
+In this tutorial, we will carry out exercises on validity. We will also deal with some data wrangling tasks. Below you will find detailed information on the data sets we will use.
 
 Overview of  datasets
 
@@ -21,20 +21,9 @@ Overview of  datasets
 
 - self_reported_voting.csv: This data set contains the results of a survey in which some citizens were asked about their voting behavior in the last elections.
 
-- organizational_data.csv: This dataset contains information on six items to measure organizational knowledge and organizational performance. All items are measured at the organizational level.
-
-Organizational Performance Items:
-Financial Performance: This item measures revenue growth.
-Customer Satisfaction: This item  measures customer satisfaction scores.
-Employee Productivity: This item measures sales per employee.
-
-Organizational Knowledge Items:
-Knowledge Sharing: This item measures the extent to which employees share knowledge and information within the organization through channels such as meetings, email, or collaborative platforms.
-Learning and Development: This item measures the organization's investment in employee training and development programs, including the number of training hours per employee or the percentage of employees participating in training.
-Innovation Culture: This item measures the organization's culture of innovation, including factors such as the encouragement of new ideas, the willingness to take risks, and the support for experimentation.
 
 ##  {.tabset .tabset-fade .tabset-pills}
-### Exercise 1 - Criterion-related validity
+### Exercises
 
 1) Load the "depression_data.csv" into  R environment. 
 ```{r}
@@ -86,7 +75,11 @@ correlation <- cor(depression_data$BDI_Scores, depression_data$New_Assessment_Sc
 cat("Correlation between BDI and New Assessment Scores:", correlation,"\n")
 
 cat("A correlation coefficient of  between the BDI scores and the scores from the new depression assessment tool indicates a very weak positive correlation. 
-A weak correlation suggests that the new depression assessment tool is not effectively capturing depressive symptoms in line with the established BDI measure. Therefore, it would be reasonable to conclude that there is low concurrent validity between the new depression assessment tool and the BDI measure.")
+A weak correlation suggests that the new depression assessment tool is not effectively capturing depressive symptoms in line with the established BDI measure. Therefore, it would be reasonable to conclude that there is low validity between the new depression assessment tool and the BDI measure.")
+
+# Note: The BDI is being considered the external criterion (gold standard) here. 
+# If it were instead treated as just another measure of the same construct, 
+# then assessing convergent construct validity would be appropriate.
 
 ```
 
@@ -159,28 +152,3 @@ phi_coefficient <- phi(table(merged_data$Voted_Official, merged_data$Voted_Self_
 # Print the Phi coefficient
 cat("Phi coefficient between Official Voting and Self-Reported Voting:", phi_coefficient, "\n", "This indicates high concurrent validity, and the discrepancies between self-reported voting and official records might have occurred due to various factors such as recall bias, social desirability bias, and errors in official records.")
 ```
-### Exercise 2 - Construct validity
-
-1) Read the "organizational_data.csv" into  R. 
-```{r}
-# Read the CSV file into R
-organizational_data <- read.csv("/Users/msimsek/Desktop/UvA/Teaching/Data_and_Measurement_RMSS/2024/W3/Tutorials/organizational_data.csv")
-```
-
-2) Print the first few rows of the dataset to have a quick look at the data
-```{r}
-#Print the first few rows of the dataframe
-head(organizational_data)
-```
-3) Analyze construct validity by studying the correlation matrix of all the items
-
-```{r}
-# Computing the correlation matrix
-correlation_matrix <- cor(organizational_data)
-# Printing the correlation matrix
-print(correlation_matrix)
-```
-
-
-
-

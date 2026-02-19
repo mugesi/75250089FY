@@ -805,10 +805,9 @@ display: none;
 
 <div id="exercises---week-3" class="section level1">
 <h1>Exercises - Week 3</h1>
-<p>In this tutorial, we will carry out exercises on criterion-related
-validity and construct validity. We will also deal with some data
-wrangling tasks. Below you will find detailed information on the data
-sets we will use.</p>
+<p>In this tutorial, we will carry out exercises on validity. We will
+also deal with some data wrangling tasks. Below you will find detailed
+information on the data sets we will use.</p>
 <p>Overview of datasets</p>
 <ul>
 <li><p>depression_data.csv: A group of social science researchers
@@ -823,29 +822,11 @@ voter turnout for a sample of citizens from offical records.</p></li>
 <li><p>self_reported_voting.csv: This data set contains the results of a
 survey in which some citizens were asked about their voting behavior in
 the last elections.</p></li>
-<li><p>organizational_data.csv: This dataset contains information on six
-items to measure organizational knowledge and organizational
-performance. All items are measured at the organizational
-level.</p></li>
 </ul>
-<p>Organizational Performance Items: Financial Performance: This item
-measures revenue growth. Customer Satisfaction: This item measures
-customer satisfaction scores. Employee Productivity: This item measures
-sales per employee.</p>
-<p>Organizational Knowledge Items: Knowledge Sharing: This item measures
-the extent to which employees share knowledge and information within the
-organization through channels such as meetings, email, or collaborative
-platforms. Learning and Development: This item measures the
-organization’s investment in employee training and development programs,
-including the number of training hours per employee or the percentage of
-employees participating in training. Innovation Culture: This item
-measures the organization’s culture of innovation, including factors
-such as the encouragement of new ideas, the willingness to take risks,
-and the support for experimentation.</p>
 <div id="section" class="section level2 tabset tabset-fade tabset-pills">
 <h2 class="tabset tabset-fade tabset-pills"></h2>
-<div id="exercise-1---criterion-related-validity" class="section level3">
-<h3>Exercise 1 - Criterion-related validity</h3>
+<div id="exercises" class="section level3">
+<h3>Exercises</h3>
 <ol style="list-style-type: decimal">
 <li>Load the “depression_data.csv” into R environment.</li>
 </ol>
@@ -944,9 +925,12 @@ correlation &lt;- cor(depression_data$BDI_Scores, depression_data$New_Assessment
 cat(&quot;Correlation between BDI and New Assessment Scores:&quot;, correlation,&quot;\n&quot;)</code></pre>
 <pre><code>## Correlation between BDI and New Assessment Scores: 0.03650943</code></pre>
 <pre class="r"><code>cat(&quot;A correlation coefficient of  between the BDI scores and the scores from the new depression assessment tool indicates a very weak positive correlation. 
-A weak correlation suggests that the new depression assessment tool is not effectively capturing depressive symptoms in line with the established BDI measure. Therefore, it would be reasonable to conclude that there is low concurrent validity between the new depression assessment tool and the BDI measure.&quot;)</code></pre>
+A weak correlation suggests that the new depression assessment tool is not effectively capturing depressive symptoms in line with the established BDI measure. Therefore, it would be reasonable to conclude that there is low validity between the new depression assessment tool and the BDI measure.&quot;)</code></pre>
 <pre><code>## A correlation coefficient of  between the BDI scores and the scores from the new depression assessment tool indicates a very weak positive correlation. 
-## A weak correlation suggests that the new depression assessment tool is not effectively capturing depressive symptoms in line with the established BDI measure. Therefore, it would be reasonable to conclude that there is low concurrent validity between the new depression assessment tool and the BDI measure.</code></pre>
+## A weak correlation suggests that the new depression assessment tool is not effectively capturing depressive symptoms in line with the established BDI measure. Therefore, it would be reasonable to conclude that there is low validity between the new depression assessment tool and the BDI measure.</code></pre>
+<pre class="r"><code># Note: The BDI is being considered the external criterion (gold standard) here. 
+# If it were instead treated as just another measure of the same construct, 
+# then assessing convergent construct validity would be appropriate.</code></pre>
 <ol start="5" style="list-style-type: decimal">
 <li>Read the dataset “official_records.csv” into R</li>
 </ol>
@@ -1154,121 +1138,6 @@ phi_coefficient &lt;- phi(table(merged_data$Voted_Official, merged_data$Voted_Se
 cat(&quot;Phi coefficient between Official Voting and Self-Reported Voting:&quot;, phi_coefficient, &quot;\n&quot;, &quot;This indicates high concurrent validity, and the discrepancies between self-reported voting and official records might have occurred due to various factors such as recall bias, social desirability bias, and errors in official records.&quot;)</code></pre>
 <pre><code>## Phi coefficient between Official Voting and Self-Reported Voting: 0.96 
 ##  This indicates high concurrent validity, and the discrepancies between self-reported voting and official records might have occurred due to various factors such as recall bias, social desirability bias, and errors in official records.</code></pre>
-</div>
-<div id="exercise-2---construct-validity" class="section level3">
-<h3>Exercise 2 - Construct validity</h3>
-<ol style="list-style-type: decimal">
-<li>Read the “organizational_data.csv” into R.</li>
-</ol>
-<pre class="r"><code># Read the CSV file into R
-organizational_data &lt;- read.csv(&quot;/Users/msimsek/Desktop/UvA/Teaching/Data_and_Measurement_RMSS/2024/W3/Tutorials/organizational_data.csv&quot;)</code></pre>
-<ol start="2" style="list-style-type: decimal">
-<li>Print the first few rows of the dataset to have a quick look at the
-data</li>
-</ol>
-<pre class="r"><code>#Print the first few rows of the dataframe
-head(organizational_data)</code></pre>
-<div class="kable-table">
-<table>
-<colgroup>
-<col width="17%" />
-<col width="17%" />
-<col width="17%" />
-<col width="14%" />
-<col width="19%" />
-<col width="14%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="right">Financial_Performance</th>
-<th align="right">Customer_Satisfaction</th>
-<th align="right">Employee_Productivity</th>
-<th align="right">Knowledge_Sharing</th>
-<th align="right">Learning_and_Development</th>
-<th align="right">Innovation_Culture</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">3.734056</td>
-<td align="right">4.944467</td>
-<td align="right">4.219689</td>
-<td align="right">8.425656</td>
-<td align="right">9.076728</td>
-<td align="right">7.274496</td>
-</tr>
-<tr class="even">
-<td align="right">3.832259</td>
-<td align="right">5.208331</td>
-<td align="right">4.383743</td>
-<td align="right">9.195570</td>
-<td align="right">8.652472</td>
-<td align="right">7.139376</td>
-</tr>
-<tr class="odd">
-<td align="right">4.367347</td>
-<td align="right">6.637581</td>
-<td align="right">5.278719</td>
-<td align="right">8.812914</td>
-<td align="right">8.293985</td>
-<td align="right">7.634221</td>
-</tr>
-<tr class="even">
-<td align="right">3.921696</td>
-<td align="right">5.445882</td>
-<td align="right">4.535225</td>
-<td align="right">8.729477</td>
-<td align="right">6.740653</td>
-<td align="right">8.375570</td>
-</tr>
-<tr class="odd">
-<td align="right">3.938372</td>
-<td align="right">5.499059</td>
-<td align="right">4.565315</td>
-<td align="right">8.223614</td>
-<td align="right">8.624252</td>
-<td align="right">6.469157</td>
-</tr>
-<tr class="even">
-<td align="right">4.414043</td>
-<td align="right">6.775364</td>
-<td align="right">5.355882</td>
-<td align="right">8.963026</td>
-<td align="right">8.257746</td>
-<td align="right">9.058463</td>
-</tr>
-</tbody>
-</table>
-</div>
-<ol start="3" style="list-style-type: decimal">
-<li>Analyze construct validity by studying the correlation matrix of all
-the items</li>
-</ol>
-<pre class="r"><code># Computing the correlation matrix
-correlation_matrix &lt;- cor(organizational_data)
-# Printing the correlation matrix
-print(correlation_matrix)</code></pre>
-<pre><code>##                          Financial_Performance Customer_Satisfaction
-## Financial_Performance               1.00000000            0.99989049
-## Customer_Satisfaction               0.99989049            1.00000000
-## Employee_Productivity               0.99999144            0.99989579
-## Knowledge_Sharing                  -0.05005972           -0.04956323
-## Learning_and_Development           -0.05397894           -0.05446528
-## Innovation_Culture                  0.12496835            0.12762451
-##                          Employee_Productivity Knowledge_Sharing
-## Financial_Performance               0.99999144       -0.05005972
-## Customer_Satisfaction               0.99989579       -0.04956323
-## Employee_Productivity               1.00000000       -0.05044253
-## Knowledge_Sharing                  -0.05044253        1.00000000
-## Learning_and_Development           -0.05422000        0.59338978
-## Innovation_Culture                  0.12482428        0.53846475
-##                          Learning_and_Development Innovation_Culture
-## Financial_Performance                 -0.05397894          0.1249684
-## Customer_Satisfaction                 -0.05446528          0.1276245
-## Employee_Productivity                 -0.05422000          0.1248243
-## Knowledge_Sharing                      0.59338978          0.5384647
-## Learning_and_Development               1.00000000          0.3213004
-## Innovation_Culture                     0.32130041          1.0000000</code></pre>
 </div>
 </div>
 </div>

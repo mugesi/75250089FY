@@ -1,0 +1,105 @@
+# Getting Started with R - Part 2
+
+## Step 1: Understanding RStudio Interface
+
+RStudio consists of four main panes:
+
+1.  **Source Pane** - This is where you write and edit scripts.
+2.  **Console Pane** - Displays executed commands and their outputs. The
+    Source Pane allows you to write and edit scripts that can be saved
+    and reused, while the Console Pane executes code immediately but
+    does not save it, meaning any code written directly in the console
+    will be lost once the session ends.
+3.  **Environment/History Pane** - Shows all the objects in your work
+    space and your command history. In R, objects can be many things,
+    such as vectors, matrices, data sets, functions.You can manually
+    remove all objects at once by clicking the “broom” icon at the top
+    of the pane.
+4.  **Files/Plots/Packages/Help Pane** - Used for managing files,
+    viewing plots, handling packages, and accessing help documentation.
+    The key tabs to focus on are Files, Plots, and Help. The Files tab
+    allows you to browse your computer’s folders and set the working
+    directory by selecting “More” -&gt; Set as Working Directory,
+    although it’s generally more efficient to use the command setwd().
+    In the Plots tab, you can view your generated plots and clear them
+    by clicking the “broom” icon at the top of the pane. The Help tab
+    provides documentation for R functions, datasets, and other objects.
+    To access these, simply type ? before the name of the function,
+    dataset, or object.
+
+## Step 2: Customized Settings
+
+Navigate to Tools &gt; Global Options to personalize your workspace.
+Here, you can adjust panel layouts, command themes, and more.
+
+## Step 3: Built-in Datasets
+
+R includes several built-in datasets that are ideal for practice and
+demonstration purposes. To view the full list, use the command data().
+You can also load individual datasets into the environment by using
+data(“Name\_of\_the\_dataset”).
+
+    data() # opens a new window in the Source Pane
+
+    data(cars)
+    data("iris")
+    data("AirPassengers")
+
+## Step 4: Managing Objects in the R Environment
+
+You can view all objects currently in your R environment using the ls()
+command. To remove a specific object (e.g., a dataset), use the command
+rm(Name\_of\_the\_object). If you’d like to clear the entire
+environment, use rm(list = ls()).
+
+    ls()  # List all objects in the environment
+
+    ## [1] "AirPassengers" "cars"          "iris"
+
+    rm(cars)  # Remove a specific object (e.g., 'cars' dataset)
+    rm(list = ls())  # Remove all objects from the environment
+
+## Step 5: Important Keyboard Shortcuts
+
+Here are some useful keyboard shortcuts for RStudio:
+
+### Windows
+
+-   **Run Selected Code**: `Ctrl + Enter`
+-   **Comment/Uncomment Lines**: `Ctrl + Shift + C`
+-   **Insert Code Section**: `Ctrl + Shift + R`
+-   **Open Command Palette**: `Ctrl + Shift + P`
+-   **Assignment operator**: `Alt + -`
+
+### macOS
+
+-   **Run Selected Code**: `Cmd + Enter`
+-   **Comment/Uncomment Lines**: `Cmd + Shift + C`
+-   **Insert Code Section**: `Cmd + Shift + R`
+-   **Open Command Palette**: `Cmd + Shift + P`
+-   **Assignment operator**: `Option + -`
+
+You can customize these shortcuts by going to Tools -&gt; Modify
+Keyboard Shortcuts.
+
+## Step 6:Installing and Loading Packages
+
+R has many built-in functions, but often you’ll need additional packages
+for specialized tasks. Fortunately, the R community has developed
+thousands of packages to make your work easier, and many of them are
+available through CRAN (the Comprehensive R Archive Network) or GitHub.
+
+To install a package, you only need to do it once (e.g., after
+reinstalling R). You can install a package by typing
+install.packages(“package\_name”) in the console or script.
+Alternatively, go to Tools -&gt; Install Packages, enter the package
+name, and click Install. Be sure to check Install dependencies so
+RStudio automatically installs any required packages.
+
+Once installed, you need to load the package each time you want to use
+it. You can do this using either the library() or require() functions.
+(library() stops execution if a package is missing, while require()
+returns FALSE but allows the code to continue.)
+
+    # install.packages("tidyverse")
+    # library(tidyverse)

@@ -1,0 +1,209 @@
+---
+title: "Data and Measurement"
+output:
+  html_document:
+    theme: 
+       bootswatch: minty
+    df_print: kable
+    code_folding: hide 
+---
+
+```{r, echo = F}
+library(formatR)
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE)
+```
+
+
+# Tutorial 4
+
+In this tutorial, we will utilize the "epiR_short.R" dataset to assess reliability using various methods. This dataset contains test and retest data for 474 participants on the EPI personality test. The EPI test includes 57 items measuring two broad dimensions: Extraversion-Introversion and Stability-Neuroticism, along with an additional Lie scale. It was developed by Eysenck and Eysenck in 1964.
+
+##  {.tabset .tabset-fade .tabset-pills}
+### Exercises - Test-retest method
+
+1) Load the "epiR_short.RData" to the environment. Note you can use load() function to load an RData.
+```{r}
+load("epiR_short.RData")
+```
+
+2) Install the package "psych" (if it is not already installed) and load the package. 
+```{r}
+library(psych)
+```
+
+3) Explore the dataset (e.g. its structure and missings). Give it a try to describe() function from psych package. Note the columns V1-V57 refer to the 57 items from the Eysenck Personality Inventory, for details see https://chsresults.com/blog/test/eysencks-personality-inventory-epi-extroversionintroversion/. 
+```{r}
+#explore the dataset
+psych::describe(epiR_short)
+
+#check the str
+str(epiR_short)
+
+#Are there any missings?
+sum(is.na(epiR_short))
+
+#I would like to see the number of missing values per variable,
+#so I decide to use sapply function to apply the nested function (sum(is.na()) to all elements of the dataframe
+sapply(epiR_short, function(x) sum(is.na(x))) 
+
+
+```
+
+4) Define one vectors containing the relevant items for impulsivity:
+- Impulsivity should include the following items:"V1", "V3", "V8", "V10", "V13", "V22", "V39", "V5", "V41"
+```{r}
+#define the vector
+impulsivity <- c("V1", "V3", "V8", "V10", "V13", "V22", "V39", "V5", "V41")
+```
+
+5) Run a test-retest analysis for impulsivity and store the results into an object as in the next exercise you are asked to refer back to this analysis. What is the reliability of impulsivity measure? Hint: Use the testRetest() function from psych package and use the impulsivity vector you defined above to specify the "keys" argument in the function (e.g. keys = impulsivity).
+```{r}
+testRetest_impulse <- testRetest(epiR_short, keys = impulsivity ,id ="id", time ="time")
+```
+
+6) When running the testRetest() function for the above exercise, you should have received a red warning that says: *"Some items were negatively correlated with total scale and were automatically reversed. This is indicated by a negative sign for the variable name"*. What does this mean? And how can you find out which variables have been reversed?
+```{r}
+cat("In multi-item measures, it is common for some items to be negatively and some positively correlated with the overall scale due to the way some questions are asked. If we look at the EPI questionnaire, we can guess which items of the impulsivity scale should be reverse coded.\n
+In the R environment, the error message states that somewhere it is indicated which items/variables from the data frame  are reverse coded by the function. To find out where these variables are, we first check the help file to see if this is specified anywhere in the text. The help file shows a section called 'Value' and here we see that the value 'key' indicates which elements have been reversed. To get more information about the key value, we check the structure of the testRetest object and call this specific value from the output by using the dollar sign.\n")
+
+str(testRetest_impulse) #we see key is a character vector containing the items for impulsivity
+testRetest_impulse$key
+
+cat("Items V5 and V41 are reverse coded.\n")
+```
+
+7) Are the missing cases automatically handled? 
+```{r}
+cat("It says in the last paragraph that 'The data are first sorted by time and id, and then those cases from time 1 that are matched at time 2 are analyzed', indicating that the missing cases are pairwise deleted.\n")
+```
+
+
+### Exercises - Split-half method
+
+In split-half reliability, a test is randomly divided into two halves, these halves are correlated with each other and then the correlation is adjusted using the Spearman-Brown prophecy formula.
+
+However, splitting a test can be a challenge. For example, there are 126 potential splits for a scale with 9 items, 12,780 for a scale with 16 items, and so on. To cope with this complexity, the splitHalf() function of the psych package systematically examines all possible splits for scales with up to 16 items, and for longer scales it tries 15,000 splits.
+
+
+1) Perform a reliability analysis for the impulsivity scale using the splitHalf() function from the psych package. Set the raw argument to TRUE, which will save all estimates from all splits in one vector and store the results.
+```{r}
+# Store the results of the analysis into an object
+split_impulse <- splitHalf(epiR_short[ ,impulsivity], raw = TRUE)
+# display the results
+split_impulse
+```
+
+2) Study the output and try to understand what these different split-half reliability refer to. 
+
+3) How many splits were performed? (Hint: You can check the length of the "raw" vector, which contains all estimates from all splits).
+```{r}
+length(split_impulse$raw)
+unique(length(split_impulse$raw))
+```
+
+4) Draw a histogram of all estimates that are stored as a vector in the "raw" element of the saved result object. Hint: Base R function hist() would be handy to use here as you can input the vector directly in the function. You can of course use ggplot as well but then you should first convert the vector to a dataframe.
+```{r}
+#Plot the values from the "raw" vector of split half reliabilities
+hist(split_impulse$raw, breaks = 100, xlab = "Split-half reliability",
+      main = "Split-half reliabilities of 9 impulsivity items")
+
+# OR
+
+library(ggplot2)
+ggplot(data.frame(estimates = split_impulse$raw), aes(x = estimates)) +
+  geom_histogram(bins = 100, fill = "skyblue", color = "black") +
+  labs(x = "Split-half reliability",
+       y = "Frequency",
+       title = "Split-half reliabilities of 9 impulsivity items")
+```
+
+5) What is the combination of items in each half for the split that gives the maximum split-half reliability? (Hint: Check the structure of the stored results to see where this information is stored).
+```{r}
+str(split_impulse)
+split_impulse$maxAB
+```
+
+
+### Exercises - Internal consistency
+For this set of exercises, we will utilize the "SAQ.sav" dataset. This dataset comprises 23 variables measured on a 5-point Likert scale and includes data from 2,571 participants. The items included are:
+
+1. Statistics makes me cry.
+2. My friends will think I’m stupid for not being able to cope with SPSS.
+3. Standard deviations excite me.
+4. I dream that Pearson is attacking me with correlation coefficients.
+5. I don’t understand statistics.
+6. I have little experience of computers.
+7. All computers hate me.
+8. I have never been good at mathematics.
+9. My friends are better at statistics than me.
+10. Computers are useful only for playing games.
+11. I did badly at mathematics at school.
+12. People try to tell you that SPSS makes statistics easier to understand but it doesn’t.
+13. I worry that I will cause irreparable damage because of my incompetenece with computers.
+14. Computers have minds of their own and deliberately go wrong whenever I use them.
+15. Computers are out to get me.
+16. I weep openly at the mention of central tendency.
+17. I slip into a coma whenever I see an equation.
+18. SPSS always crashes when I try to use it.
+19. Everybody looks at me when I use SPSS.
+20. I can’t sleep for thoughts of eigen vectors.
+21. I wake up under my duvet thinking that I am trapped under a normal distribution.
+22. My friends are better at SPSS than I am.
+23. If I’m good at statistics my friends will think I’m a nerd.
+
+
+1. Load the data to the environment. If you use read.spss function set the use.value.labels argument to FALSE to avoid converting numerical variables (with value labels) to factors as the functions we will use (alpha() and fa()) require numerical variables.
+```{r}
+library(foreign)
+saq_df <- read.spss("~/Downloads/DS5 SPSS Files/SAQ.sav", to.data.frame = TRUE, use.value.labels = FALSE)
+```
+
+2. Explore the dataset. 
+```{r}
+#Explore the dataset
+psych::describe(saq_df[1:5]) # Displaying only the first 5 variables to avoid overwhelming the document with excessive information.
+
+#Check missings
+sum(is.na(saq_df))
+
+```
+
+3. Compute the correlation matrix
+```{r}
+Rmatrix <- cor(saq_df)
+print(round(Rmatrix [1:5, 1:5], digits = 2)) # Displaying only the first 5 rows and columns, and rounding to 2 decimal points to avoid overwhelming the document with excessive information. 
+```
+
+4. We can also plot correlation matrices by using the cor.plot() function from the psych package. Try this out -I suggest you set the "upper"argument to FALSE to get a better representation - and see if it matches your results from the previous exercise.
+```{r}
+#Plot R matrix
+psych::cor.plot(Rmatrix,upper = FALSE)
+```
+5. Even if you enlarge the diagram, discerning the variable names on the x-axis remains challenging because we have many variables and long variable names. Therefore, change the variable names in your data frame from "Question_1", "Question_2" etc. to "q1", "q2" etc. You can accomplish this using the names() or colnames() functions together with the gsub() function. Then display the correlation matrix again and see if you can find clusters of variables that exhibit stronger correlations among themselves compared to other groups of variables.
+```{r}
+# Rename variables
+colnames(saq_df) <- gsub("Question_", "q", colnames(saq_df))
+print(colnames(saq_df))
+
+psych::cor.plot(saq_df, upper = FALSE)
+```
+
+6. According to Field (2019), items 2, 9, 19, 22 and 23 are measuring a specific type of fear, namely, fear of peer evaluation. Create a new dataframe consisting only of these five items. 
+```{r}
+fear_peer <-saq_df [, c(2, 9, 19, 22, 23)]
+```
+
+7. Find the Cronbach's alpha using the alpha() function from psych package. 
+Note: ggplot2 also has a function called alpha and if you’ve loaded ggplot2, the alpha function in ggplot2 may be called instead. To avoid this call the function using psych::alpha().
+```{r}
+psych::alpha(fear_peer)
+```
+
+8. Interpret the results.
+- We usually check the raw alpha (unless items have different scales or measurement units). An alpha value of ≥ 0.7 or 0.8 indicates good reliability (Kline, 1999).
+- Average_r represents the mean inter-item correlation used in alpha computation, while median_r denotes the median inter-item correlation.
+- The mean refers to the scale mean, representing the mean of all individual means.
+- In the section "Reliability if an Item is Dropped", each row corresponds to an item and displays its associated raw alpha, which reflects the overall alpha when that specific item is dropped. For instance, the first row pertains to q02. If dropped, the overall alpha reduces to 0.52, indicating decreased reliability.We evaluate if any raw alpha value exceeds the overall alpha of 0.57. If so, dropping that item would increase the overall alpha of the scale. Other columns in this section illustrate how other statistics would change if the item were dropped.
+- In the "Item statistics" part, the correlation between the items and the total score from the scale are shown.
+- In the last part of the output, the frequency table illustrates the percentage of observations per response category and item. For a 5-point scale, for example, it shows the percentage of answers that were rated 1, 2, 3, 4 or 5. This helps to assess the distribution of answers and the uniformity among the participants.
